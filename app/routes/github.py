@@ -3,6 +3,7 @@ from app.services.github_client import GitHubClient
 from app.models.github import GitHubRepository
 from app.services.metrics_engine import MetricsEngine
 from app.models.metrics import RepositoryMetrics
+from app.core.logger import logger
 
 router = APIRouter(prefix="/github", tags=["GitHub"])
 
@@ -34,6 +35,7 @@ def get_repository(owner: str, repo: str):
     },
 )
 def get_repository_metrics(owner: str, repo: str):
+    logger.info(f"Metrics requested for {owner}/{repo}")
     try:
         repository = client.get_repository(owner, repo)
         commits_count = client.get_commits_count(owner, repo)
