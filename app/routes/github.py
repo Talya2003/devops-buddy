@@ -24,10 +24,18 @@ def get_repository(owner: str, repo: str):
     "/repo/{owner}/{repo}/metrics",
     response_model=RepositoryMetrics,
 )
+
+@router.get(
+    "/repo/{owner}/{repo}/metrics",
+    response_model=RepositoryMetrics,
+    responses={
+        404: {"description": "Repository not found"},
+        429: {"description": "GitHub API rate limit exceeded"},
+    },
+)
 def get_repository_metrics(owner: str, repo: str):
     try:
         repository = client.get_repository(owner, repo)
-
         commits_count = client.get_commits_count(owner, repo)
         contributors_count = client.get_contributors_count(owner, repo)
 
@@ -36,5 +44,5 @@ def get_repository_metrics(owner: str, repo: str):
             commits_count,
             contributors_count,
         )
-    except Exception as exc:
-        raise HTTPException(status_code=400, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
