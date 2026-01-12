@@ -18,6 +18,7 @@ class MetricsEngine:
 
         commits_score = min(commits_count / 50, 10)
         contributors_score = min(contributors_count, 10)
+        commits_recent_score = min(commits_count / 30, 10)
 
         activity_score = round(
             (

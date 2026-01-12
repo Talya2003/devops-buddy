@@ -3,6 +3,7 @@ from app.core.config import settings
 from app.models.github import GitHubRepository
 import httpx
 from app.core.logger import logger
+from datetime import datetime, timedelta
 
 
 class GitHubClient:
@@ -70,3 +71,30 @@ class GitHubClient:
         link_header = response.headers["Link"]
         last_page = int(link_header.split("page=")[-1].split(">")[0])
         return last_page
+
+
+    def get_summary(self, owner: str, repo: str) -> dict:
+        repository = self.get_repository(owner, repo)
+        contributors = self.get_contributors_count(owner, repo)
+
+        return {
+            "full_name": repository.full_name,
+            "description": repository.description,
+            "stars": repository.stars,
+            "forks": repository.forks,
+            "open_issues": repository.open_issues,
+            "contributors": contributors,
+            "language": repository.language,
+            "html_url": repository.html_url,
+        }
+    
+    def get_commits_last_30_days(self, owner: str, repo: str) -> int:
+        since = (datetime.utcnow() - timedelta(days=30)).isoformat() + "Z"
+
+        response = self.client.get(
+            f"/repos/{owner}/{repo}/commits",
+            params={"since": since, "per_page": 100},
+        )
+        response.raise_for_status()
+
+        return len(response.json())

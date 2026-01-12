@@ -4,6 +4,7 @@ from app.models.github import GitHubRepository
 from app.services.metrics_engine import MetricsEngine
 from app.models.metrics import RepositoryMetrics
 from app.core.logger import logger
+from app.models.summary import RepositorySummary
 
 router = APIRouter(prefix="/github", tags=["GitHub"])
 
@@ -46,5 +47,16 @@ def get_repository_metrics(owner: str, repo: str):
             commits_count,
             contributors_count,
         )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@router.get(
+    "/repo/{owner}/{repo}/summary",
+    response_model=RepositorySummary,
+)
+def get_repository_summary(owner: str, repo: str):
+    try:
+        return client.get_summary(owner, repo)
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
