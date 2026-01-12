@@ -4,6 +4,11 @@ DevOps Buddy is a fully Python-based system that analyzes GitHub repositories an
 The project is designed as a real-world, production-style MVP — focusing on clarity, maintainability, developer experience, and visual impact.
 
 
+## 🌐 Live Demo
+- **Dashboard:** https://devops-buddy-dashboard.onrender.com
+- **API Docs:** https://devops-buddy-api.onrender.com/docs
+
+
 ## ✨ Features (MVP)
 - Analyze GitHub repositories using the GitHub API
 - Calculate meaningful DevOps metrics (activity, popularity, issues, commits, contributors)
