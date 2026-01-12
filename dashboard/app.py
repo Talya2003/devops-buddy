@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import pandas as pd
 
 API_BASE_URL = "http://127.0.0.1:8000"
 
@@ -65,16 +66,42 @@ if analyze:
 
             st.markdown("---")
 
+            # --- Commit Activity Graph ---
+            activity_res = requests.get(
+                f"{API_BASE_URL}/github/repo/{owner}/{repo}/commits/activity"
+            )
+
+            if activity_res.status_code == 200:
+                activity = activity_res.json()
+                if activity:
+                    df = pd.DataFrame(
+                        activity.items(),
+                        columns=["Date", "Commits"]
+                    ).sort_values("Date")
+
+                    st.subheader("📈 Commit Activity (Last 30 Days)")
+                    st.line_chart(df.set_index("Date"))
+
+            st.markdown("---")
+
             # --- Health Indicators ---
+            def score_badge(score):
+                if score >= 7:
+                    return "🟢 Excellent"
+                if score >= 4:
+                    return "🟡 Moderate"
+                return "🔴 Needs Attention"
+
             h1, h2, h3 = st.columns(3)
+
             with h1:
-                st.metric(
-                    "🔥 Activity Score",
-                    metrics["activity_score"],
-                )
+                st.metric("🔥 Activity Score", metrics["activity_score"])
+                st.markdown(f"### {score_badge(metrics['activity_score'])}")
+
             with h2:
                 st.write("Issue Health")
                 st.write(health_badge(metrics["issue_health_score"], good=8, warn=5))
+
             with h3:
                 st.write("Popularity")
                 st.write(health_badge(metrics["popularity_score"], good=6, warn=3))
@@ -88,6 +115,4 @@ if analyze:
             b3.metric("Commits", metrics["commits_score"])
             b4.metric("Contributors", metrics["contributors_score"])
 
-            st.markdown(
-                f"[🔗 View on GitHub]({summary['html_url']})"
-            )
+            st.markdown(f"[🔗 View on GitHub]({summary['html_url']})")
