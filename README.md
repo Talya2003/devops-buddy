@@ -1,39 +1,51 @@
 # devops-buddy
-DevOps Buddy – a Python-based system that analyzes GitHub repositories and provides actionable DevOps insights via a clean API and dashboard.
+DevOps Buddy is a fully Python-based system that analyzes GitHub repositories and provides clear, actionable DevOps insights through a clean API and an interactive dashboard.
 
-DevOps Buddy is a fully Python-based system that analyzes GitHub repositories and provides clear, actionable DevOps insights through a clean API and dashboard.
+The project is designed as a real-world, production-style MVP — focusing on clarity, maintainability, developer experience, and visual impact.
 
-The project is designed as a real-world, production-style MVP — focusing on clarity, maintainability, and developer experience.
-
----
 
 ## ✨ Features (MVP)
 - Analyze GitHub repositories using the GitHub API
+- Calculate meaningful DevOps metrics (activity, popularity, issues, commits, contributors)
 - Expose insights through a FastAPI-based backend
-- Clean and extensible project architecture
 - Interactive API documentation (Swagger UI)
+- Clean, extensible, production-style architecture
+- Logging, configuration management, and automated tests
 
----
 
 ## 🧱 Tech Stack
 - **Python 3.10+**
 - **FastAPI** – API framework
 - **Uvicorn** – ASGI server
+- **Pydantic** – Data validation
+- **Streamlit** – Interactive dashboard
+- **pytest** – Testing framework
 - **SQLite** (planned)
 - **SQLAlchemy** (planned)
 
----
 
 ## 📦 Project Structure
+```
 devops-buddy/
 ├── app/
-│ ├── init.py
+│ ├── core/ # config & logging
+│ ├── models/ # Pydantic models
+│ ├── routes/ # API routes
+│ ├── services/ # GitHub client & metrics engine
 │ └── main.py
+│
+├── dashboard/
+│ └── app.py # Streamlit dashboard
+│
+├── tests/
+│ ├── test_health.py
+│ └── test_metrics.py
 │
 ├── requirements.txt
 ├── README.md
 ├── .gitignore
 └── LICENSE
+```
 
 ## ▶️ Getting Started
 
@@ -65,12 +77,31 @@ Visit:
  * API: `http://127.0.0.1:8000`
  * Docs: `http://127.0.0.1:8000/docs`
 
-## 🧭 Roadmap
 
- - GitHub API integration
- - Repository metrics engine
- - Persistent storage layer
- - Dashboard UI
+## 📊 Run the Dashboard
+In a separate terminal (while the API is running):
+
+`streamlit run dashboard/app.py`
+
+Dashboard will open at: 
+`http://localhost:8501`
+
+
+Enter a GitHub owner and repository name to instantly view DevOps insights.
+
+## 🧪 Run Tests
+`pytest`
+
+Optional coverage:
+`pytest --cov=app
+`
+
+## 🧭 Roadmap
+ - Historical metrics with persistent storage
+ - Advanced DevOps scoring algorithms
+ - Charts & trends in the dashboard
+ - GitHub Actions (CI)
+ - Dockerized deployment
  - Notifications & automation
 
 ## 📄 License
