@@ -1,12 +1,16 @@
 from fastapi import APIRouter, HTTPException
 from app.services.github_client import GitHubClient
+from app.models.github import GitHubRepository
 
 router = APIRouter(prefix="/github", tags=["GitHub"])
 
 client = GitHubClient()
 
 
-@router.get("/repo/{owner}/{repo}")
+@router.get(
+    "/repo/{owner}/{repo}",
+    response_model=GitHubRepository,
+)
 def get_repository(owner: str, repo: str):
     try:
         return client.get_repository(owner, repo)
