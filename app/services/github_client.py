@@ -30,3 +30,33 @@ class GitHubClient:
             language=data["language"],
             html_url=data["html_url"],
         )
+
+
+    def get_commits_count(self, owner: str, repo: str) -> int:
+        response = self.client.get(
+            f"/repos/{owner}/{repo}/commits",
+            params={"per_page": 1},
+        )
+        response.raise_for_status()
+
+        if "Link" not in response.headers:
+            return len(response.json())
+
+        link_header = response.headers["Link"]
+        last_page = int(link_header.split("page=")[-1].split(">")[0])
+        return last_page
+
+
+    def get_contributors_count(self, owner: str, repo: str) -> int:
+        response = self.client.get(
+            f"/repos/{owner}/{repo}/contributors",
+            params={"per_page": 1},
+        )
+        response.raise_for_status()
+
+        if "Link" not in response.headers:
+            return len(response.json())
+
+        link_header = response.headers["Link"]
+        last_page = int(link_header.split("page=")[-1].split(">")[0])
+        return last_page

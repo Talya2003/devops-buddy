@@ -27,6 +27,14 @@ def get_repository(owner: str, repo: str):
 def get_repository_metrics(owner: str, repo: str):
     try:
         repository = client.get_repository(owner, repo)
-        return MetricsEngine.calculate(repository)
+
+        commits_count = client.get_commits_count(owner, repo)
+        contributors_count = client.get_contributors_count(owner, repo)
+
+        return MetricsEngine.calculate(
+            repository,
+            commits_count,
+            contributors_count,
+        )
     except Exception as exc:
         raise HTTPException(status_code=400, detail=str(exc))
