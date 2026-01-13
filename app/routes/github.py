@@ -60,3 +60,11 @@ def get_repository_summary(owner: str, repo: str):
         return client.get_summary(owner, repo)
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
+
+
+@router.get("/repo/{owner}/{repo}/commits/activity")
+def get_commit_activity(owner: str, repo: str):
+    try:
+        return client.get_commit_activity_last_30_days(owner, repo)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))

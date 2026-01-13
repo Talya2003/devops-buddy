@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 
 API_BASE_URL = "https://devops-buddy-8jcc.onrender.com"
+# https://devops-buddy-1.onrender.com
 
 st.set_page_config(
     page_title="DevOps Buddy Dashboard",

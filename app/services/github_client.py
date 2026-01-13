@@ -4,6 +4,7 @@ from app.models.github import GitHubRepository
 import httpx
 from app.core.logger import logger
 from datetime import datetime, timedelta
+from collections import Counter
 
 
 class GitHubClient:
@@ -98,3 +99,22 @@ class GitHubClient:
         response.raise_for_status()
 
         return len(response.json())
+
+
+    def get_commit_activity_last_30_days(self, owner: str, repo: str) -> dict:
+        since = (datetime.utcnow() - timedelta(days=30)).isoformat() + "Z"
+
+        response = self.client.get(
+            f"/repos/{owner}/{repo}/commits",
+            params={"since": since, "per_page": 100},
+        )
+        response.raise_for_status()
+
+        commits = response.json()
+
+        counter = Counter()
+        for commit in commits:
+            date = commit["commit"]["author"]["date"][:10]
+            counter[date] += 1
+
+        return dict(counter)
